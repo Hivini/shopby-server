@@ -177,3 +177,5 @@ dist
 # TernJS port file
 .tern-port
 
+# DB configuration
+config/
