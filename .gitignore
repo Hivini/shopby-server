@@ -179,3 +179,6 @@ dist
 
 # DB configuration
 config/
+
+# Remove start file
+start.sh
