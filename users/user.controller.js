@@ -11,7 +11,10 @@ module.exports = router;
 function registerUser(req, res, next) {
     userService.registerUser(req.body)
         .then((status) => res.json(status))
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err);
+            res.json({successful: 0});
+        });
 }
 
 function getByEmail(req, res, next) {
