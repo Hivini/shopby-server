@@ -18,7 +18,7 @@ function registerUser(req, res, next) {
 }
 
 function getByEmail(req, res, next) {
-    userService.getByEmail(req.body)
+    userService.getByEmail(req.headers['email'])
         .then((user) => {
             if (user) {
                 res.json(user);

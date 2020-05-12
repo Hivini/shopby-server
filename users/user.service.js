@@ -24,6 +24,6 @@ async function registerUser(userParam) {
     );
 }
 
-async function getByEmail(userParam) {
-    return await db.getUserByEmail(userParam.email);
+async function getByEmail(email) {
+    return await db.getUserByEmail(email);
 }
