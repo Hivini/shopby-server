@@ -33,6 +33,7 @@ async function getByEmail(email) {
 async function loginUser(email, password) {
     let user = await db.getUserByEmail(email);
     if (user !== {}) {
+        print(user);
         if (bcrypt.compareSync(password, user.hashPass)) {
             console.log('User ' + email + ' logged in.');
             return {
