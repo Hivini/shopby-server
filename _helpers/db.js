@@ -40,8 +40,6 @@ async function registerUser(email, hashPass, name, role, phoneNumber, deliveryDi
                 }
             });
     });
-
-
 }
 
 async function getUserByEmail(email) {

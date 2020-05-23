@@ -1,9 +1,10 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const db = require('../_helpers/db');
 
 module.exports = {
     registerUser,
-    getByEmail
+    getByEmail,
+    loginUser,
 };
 
 async function registerUser(userParam) {
@@ -26,4 +27,20 @@ async function registerUser(userParam) {
 
 async function getByEmail(email) {
     return await db.getUserByEmail(email);
+}
+
+// This is not a secure logging. Use tokens instead, this is a quick project and time is lacking.
+async function loginUser(email, password) {
+    let user = await db.getUserByEmail(email);
+    if (user && bcrypt.compareSync(password, user.hashPass)) {
+        console.log('User ' + email + ' logged in.');
+        return {
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            phoneNumber: user.phoneNumber,
+            deliveryDirection: user.deliveryDirection,
+        }
+    }
+    return null;
 }
