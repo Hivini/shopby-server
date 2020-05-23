@@ -32,7 +32,7 @@ async function getByEmail(email) {
 // This is not a secure logging. Use tokens instead, this is a quick project and time is lacking.
 async function loginUser(email, password) {
     let user = await db.getUserByEmail(email);
-    if (user) {
+    if (user !== {}) {
         if (bcrypt.compareSync(password, user.hashPass)) {
             console.log('User ' + email + ' logged in.');
             return {

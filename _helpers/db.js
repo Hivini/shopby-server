@@ -58,7 +58,7 @@ async function getUserByEmail(email) {
                             if (result.length > 0) {
                                 resolve(result[0]);
                             } else {
-                                resolve(null);
+                                resolve({});
                             }
                         }
                     });
