@@ -5,6 +5,7 @@ const productService = require('./product.service');
 // routes
 router.get('/getAllProductsByUser', getAllProducts);
 router.post('/registerProduct', registerProduct);
+router.delete('/deleteProduct', deleteProduct);
 
 module.exports = router;
 
@@ -27,5 +28,14 @@ function registerProduct(req, res, next) {
         .catch(err => {
             console.log(err);
             res.json({successful: 0});
-        })
+        });
+}
+
+function deleteProduct(req, res, next) {
+    productService.deleteProduct(req.headers['id'])
+        .then((status) => res.json(status))
+        .catch(err => {
+            console.log(err);
+            res.json({successful: 0});
+        });
 }

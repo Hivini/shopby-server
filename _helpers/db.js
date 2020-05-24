@@ -1,4 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
+const mongodb = require('mongodb');
 const url = require('../config/env-vars').db_url;
 
 module.exports = {
@@ -6,6 +7,7 @@ module.exports = {
     getUserByEmail,
     getAllProductsByUser,
     registerProduct,
+    deleteProduct,
 };
 
 async function registerUser(email, hashPass, name, role, phoneNumber, deliveryDirection) {
@@ -121,6 +123,57 @@ async function getAllProductsByUser(email) {
                         } else {
                             if (result.length > 0) {
                                 resolve(result);
+                            } else {
+                                resolve({});
+                            }
+                        }
+                    });
+                }
+            });
+    });
+}
+
+async function deleteProduct(id) {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let dbo = db.db('shopby');
+                    const query = { _id: new mongodb.ObjectID(id) };
+                    getProductById(id).then((product) => {
+                       if (Object.keys(product) < 1) {
+                           dbo.collection("products").deleteOne(query, function(err, result) {
+                               if (err) {
+                                   reject(err);
+                               }
+                               resolve({successful: 1});
+                           });
+                       } else {
+                           resolve({successful: 0});
+                       }
+                    });
+                }
+            });
+    });
+}
+
+async function getProductById(id) {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let dbo = db.db('shopby');
+                    const query = { email: new mongodb.ObjectID(id) };
+                    dbo.collection("product").find(query).toArray(function(err, result) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            if (result.length > 0) {
+                                resolve(result[0]);
                             } else {
                                 resolve({});
                             }

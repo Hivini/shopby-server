@@ -3,6 +3,7 @@ const db = require('../_helpers/db');
 module.exports = {
     getAllProductsByUser,
     registerProduct,
+    deleteProduct,
 };
 
 async function getAllProductsByUser(email) {
@@ -20,4 +21,8 @@ async function registerProduct(body) {
         body.price,
         body.imageUrl
     );
+}
+
+async function deleteProduct(id) {
+    return await db.deleteProduct(id);
 }
