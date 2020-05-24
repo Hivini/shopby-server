@@ -90,7 +90,7 @@ async function registerProduct(email, title, description, price, imageUrl) {
                                         user: user,
                                         title: title,
                                         description: description,
-                                        price: price,
+                                        price: parseInt(price),
                                         imageUrl: imageUrl,
                                         rating: 0,
                                         totalRatings: 0,
