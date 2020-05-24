@@ -32,7 +32,7 @@ function registerProduct(req, res, next) {
 }
 
 function deleteProduct(req, res, next) {
-    productService.deleteProduct(req.headers['id'])
+    productService.deleteProduct(req.headers['_id'])
         .then((status) => res.json(status))
         .catch(err => {
             console.log(err);
