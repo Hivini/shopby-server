@@ -13,11 +13,12 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/users', require('./users/user.controller'));
+app.use('/products', require('./products/product.controller'));
 // Error handler
 app.use(errorHandler);
 
 app.listen(8080, function () {
-    console.log('Example app listening on port 8080!');
+    console.log('App listening on port 8080!');
 });
 
 process.on('SIGINT', function() {
