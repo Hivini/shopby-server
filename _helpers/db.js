@@ -114,7 +114,7 @@ async function getAllProductsByUser(email) {
                     reject(err);
                 } else {
                     let dbo = db.db('shopby');
-                    const query = { user: {email: email} };
+                    const query = { "user.email": email };
                     dbo.collection("users").find(query).toArray(function(err, result) {
                         if (err) {
                             reject(err);
