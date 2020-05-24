@@ -8,6 +8,7 @@ module.exports = {
     getAllProductsByUser,
     registerProduct,
     deleteProduct,
+    getProductsMatch,
 };
 
 async function registerUser(email, hashPass, name, role, phoneNumber, deliveryDirection) {
@@ -173,6 +174,31 @@ async function getProductById(id) {
                             reject(err);
                         } else {
                             if (result != null) {
+                                resolve(result);
+                            } else {
+                                resolve({});
+                            }
+                        }
+                    });
+                }
+            });
+    });
+}
+
+async function getProductsMatch(search) {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let dbo = db.db('shopby');
+                    const query = { $text: { $search: search } };
+                    dbo.collection("products").find(query).toArray(function(err, result) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            if (result.length > 0) {
                                 resolve(result);
                             } else {
                                 resolve({});

@@ -4,6 +4,7 @@ module.exports = {
     getAllProductsByUser,
     registerProduct,
     deleteProduct,
+    searchProduct,
 };
 
 async function getAllProductsByUser(email) {
@@ -25,4 +26,8 @@ async function registerProduct(body) {
 
 async function deleteProduct(id) {
     return await db.deleteProduct(id);
+}
+
+async function searchProduct(query) {
+    return await db.getProductsMatch(query);
 }

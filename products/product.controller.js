@@ -4,6 +4,7 @@ const productService = require('./product.service');
 
 // routes
 router.get('/getAllProductsByUser', getAllProducts);
+router.get('/searchProduct', searchProduct);
 router.post('/registerProduct', registerProduct);
 router.delete('/deleteProduct', deleteProduct);
 
@@ -34,6 +35,15 @@ function registerProduct(req, res, next) {
 function deleteProduct(req, res, next) {
     productService.deleteProduct(req.headers['_id'])
         .then((status) => res.json(status))
+        .catch(err => {
+            console.log(err);
+            res.json({successful: 0});
+        });
+}
+
+function searchProduct(req, res, next) {
+    productService.searchProduct(req.headers['query'])
+        .then((products) => res.json({successful: 1, products: products}))
         .catch(err => {
             console.log(err);
             res.json({successful: 0});
