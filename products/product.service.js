@@ -5,6 +5,7 @@ module.exports = {
     registerProduct,
     deleteProduct,
     searchProduct,
+    addToRatings,
 };
 
 async function getAllProductsByUser(email) {
@@ -30,4 +31,8 @@ async function deleteProduct(id) {
 
 async function searchProduct(query) {
     return await db.getProductsMatch(query);
+}
+
+async function addToRatings(id, rating) {
+    return await db.addRatingsToProduct(id, rating);
 }

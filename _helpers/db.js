@@ -18,6 +18,7 @@ module.exports = {
     getMessageCount,
     addUserBuyHistory,
     getUserBuyHistory,
+    addRatingsToProduct,
 };
 
 async function registerUser(email, hashPass, name, role, phoneNumber, deliveryDirection) {
@@ -189,6 +190,28 @@ async function getProductById(id) {
                                 resolve({});
                             }
                         }
+                    });
+                }
+            });
+    });
+}
+
+async function addRatingsToProduct(id, rating) {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    getProductById(id).then((product) => {
+                        let dbo = db.db('shopby');
+                        const query = { _id: new mongodb.ObjectID(id) };
+                        const newValue = { $set: {'rating': product['rating'] + 1, 'totalRatings': product['totalRatings'] + rating}};
+                        dbo.collection("products").updateOne(query, newValue, function (err, res) {
+                            if (err) throw err;
+                            resolve({'successful': 1});
+                            db.close();
+                        })
                     });
                 }
             });
