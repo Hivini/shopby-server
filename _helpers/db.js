@@ -16,6 +16,8 @@ module.exports = {
     getProductCount,
     getUserCount,
     getMessageCount,
+    addUserBuyHistory,
+    getUserBuyHistory,
 };
 
 async function registerUser(email, hashPass, name, role, phoneNumber, deliveryDirection) {
@@ -357,6 +359,66 @@ async function getMessageCount() {
                     let dbo = db.db('shopby');
                     dbo.collection("messages").countDocuments()
                         .then(count => resolve(count));
+                }
+            });
+    });
+}
+
+async function addUserBuyHistory(email, title, vendor, price) {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    getUserByEmail(email).then((user) => {
+                        if (Object.keys(user).length < 2) {
+                            resolve({successful: 0});
+                        } else {
+                            MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+                                .then((db, err) => {
+                                    if (err) throw err;
+                                    const dbo = db.db("shopby");
+                                    let history = {
+                                        timestamp: Date.now(),
+                                        email: email,
+                                        title: title,
+                                        vendor: vendor,
+                                        price: parseInt(price)
+                                    };
+                                    dbo.collection("history").insertOne(history, function (err, res) {
+                                        if (err) throw err;
+                                        resolve({successful: 1});
+                                        db.close();
+                                    });
+                                });
+                        }
+                    });
+                }
+            });
+    });
+}
+
+async function getUserBuyHistory(email) {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let dbo = db.db('shopby');
+                    const query = { $query: { email: email }, $orderby: {'timestamp': -1}};
+                    dbo.collection("history").find(query).toArray( function(err, result) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            if (result.length > 0) {
+                                resolve(result);
+                            } else {
+                                resolve({});
+                            }
+                        }
+                    });
                 }
             });
     });

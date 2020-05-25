@@ -3,10 +3,12 @@ const router = express.Router();
 const userService = require('./user.service');
 
 // routes
-router.get('/getByEmail', getByEmail);
 router.post('/registerUser', registerUser);
 router.post('/loginUser', loginUser);
+router.post('/addUserHistory', addUserHistory);
+router.get('/getByEmail', getByEmail);
 router.get('/getStatistics', getStatistics);
+router.get('/getUserHistory', getUserHistory);
 
 module.exports = router;
 
@@ -52,6 +54,26 @@ function getStatistics(req, res, next) {
             } else {
                 res.json({});
             }
+        })
+        .catch(err => console.log(err));
+}
+
+function getUserHistory(req, res, next) {
+    userService.getUserBuyHistory(req.headers['email'])
+        .then((stats) => {
+            if (stats) {
+                res.json(stats);
+            } else {
+                res.json({});
+            }
+        })
+        .catch(err => console.log(err));
+}
+
+function addUserHistory(req, res, next) {
+    userService.addUserBuyHistory(req.headers['email'], req.headers['title'], req.headers['vendor'], req.headers['price'])
+        .then((status) => {
+            res.json(status);
         })
         .catch(err => console.log(err));
 }

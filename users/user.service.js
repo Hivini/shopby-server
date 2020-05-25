@@ -5,7 +5,9 @@ module.exports = {
     registerUser,
     getByEmail,
     loginUser,
-    getStatistics
+    getStatistics,
+    getUserBuyHistory,
+    addUserBuyHistory,
 };
 
 async function registerUser(userParam) {
@@ -57,4 +59,12 @@ async function getStatistics() {
         userCount,
         msgCount,
     ];
+}
+
+async function addUserBuyHistory(email, title, vendor, price) {
+    return await db.addUserBuyHistory(email, title, vendor, price);
+}
+
+async function getUserBuyHistory(email) {
+    return await db.getUserBuyHistory(email);
 }
