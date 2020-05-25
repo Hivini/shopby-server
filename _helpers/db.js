@@ -10,6 +10,8 @@ module.exports = {
     registerProduct,
     deleteProduct,
     getProductsMatch,
+    sendMessage,
+    getMessages,
 };
 
 async function registerUser(email, hashPass, name, role, phoneNumber, deliveryDirection) {
@@ -205,6 +207,80 @@ async function getProductsMatch(search) {
                             } else {
                                 resolve({});
                             }
+                        }
+                    });
+                }
+            });
+    });
+}
+
+async function getMessages(user1, user2) {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let dbo = db.db('shopby');
+                    const query = { $query: { users: { $all: [user1, user2] } }, $orderby: {'messages.timestamp': -1}};
+                    dbo.collection("messages").findOne(query, function(err, result) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            if (result != null) {
+                                resolve(result);
+                            } else {
+                                resolve({});
+                            }
+                        }
+                    });
+                }
+            });
+    });
+}
+
+async function sendMessage(to, fromE, message) {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    getMessages(to, fromE).then((messages) => {
+                        if (Object.keys(messages).length > 1) {
+                            MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+                                .then((db, err) => {
+                                    if (err) throw err;
+                                    const dbo = db.db("shopby");
+                                    let previousMessages = messages['messages'];
+                                    previousMessages.push({ 'from': fromE, 'message': message, 'timestamp': Date.now()});
+                                    const query = { users: { $all: [to, fromE] } };
+                                    const newValue = { $set: {'messages': previousMessages}};
+                                    dbo.collection("messages").updateOne(query, newValue, function (err, res) {
+                                        if (err) throw err;
+                                        resolve({'successful': 1});
+                                        db.close();
+                                    })
+                                });
+                        } else {
+                            MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+                                .then((db, err) => {
+                                    if (err) throw err;
+                                    const dbo = db.db("shopby");
+                                    let newMessage = {
+                                        users: [to, fromE],
+                                        messages: [{
+                                            'from': fromE,
+                                            'message': message,
+                                            'timestamp': Date.now()
+                                        }]
+                                    };
+                                    dbo.collection("messages").insertOne(newMessage, function (err, res) {
+                                        if (err) throw err;
+                                        resolve({'successful': 1});
+                                        db.close();
+                                    })
+                                });
                         }
                     });
                 }

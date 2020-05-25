@@ -18,7 +18,7 @@ function sendEmail(to, productInfo) {
         from: env.mailer_email,
         to: to,
         subject: 'Product Deleted',
-        text: 'Your product ' + productInfo + 'has been deleted'
+        text: 'Your product \'' + productInfo + '\' has been deleted'
     };
 
     transporter.sendMail(mailOptions, function(error, info){

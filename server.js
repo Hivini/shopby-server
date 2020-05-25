@@ -14,6 +14,7 @@ app.use(cors());
 
 app.use('/users', require('./users/user.controller'));
 app.use('/products', require('./products/product.controller'));
+app.use('/chat', require('./chat/chat.controller'));
 // Error handler
 app.use(errorHandler);
 
