@@ -52,7 +52,7 @@ function searchProduct(req, res, next) {
 }
 
 function addToRatings(req, res, next) {
-    productService.addToRatings(req['id'], req['rating'])
+    productService.addToRatings(req.headers['id'], req.headers['rating'])
         .then((status) => res.json(status))
         .catch(err => {
             console.log(err);
