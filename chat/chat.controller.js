@@ -5,6 +5,7 @@ const chatService = require('./chat.service');
 // routes
 router.post('/saveMessage', saveMessage);
 router.get('/getMessages', getMessages);
+router.get('/getUserMessages', getUserMessages);
 
 module.exports = router;
 
@@ -25,6 +26,18 @@ function getMessages(req, res, next) {
         .then((message) => {
             if (message) {
                 res.json(message);
+            } else {
+                res.json({});
+            }
+        })
+        .catch(err => console.log(err));
+}
+
+function getUserMessages(req, res, next) {
+    chatService.getUserMessages(req.headers['user'])
+        .then((messages) => {
+            if (messages) {
+                res.json(messages);
             } else {
                 res.json({});
             }
