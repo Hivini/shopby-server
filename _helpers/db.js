@@ -206,7 +206,7 @@ async function addRatingsToProduct(id, rating) {
                     getProductById(id).then((product) => {
                         let dbo = db.db('shopby');
                         const query = { _id: new mongodb.ObjectID(id) };
-                        const newValue = { $set: {'rating': product['rating'] + 1, 'totalRatings': product['totalRatings'] + rating}};
+                        const newValue = { $set: {'rating': product['rating'] + 1, 'totalRatings': product['totalRatings'] + parseInt(rating)}};
                         dbo.collection("products").updateOne(query, newValue, function (err, res) {
                             if (err) throw err;
                             resolve({'successful': 1});
