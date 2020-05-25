@@ -13,6 +13,9 @@ module.exports = {
     sendMessage,
     getMessages,
     getUserMessages,
+    getProductCount,
+    getUserCount,
+    getMessageCount,
 };
 
 async function registerUser(email, hashPass, name, role, phoneNumber, deliveryDirection) {
@@ -309,6 +312,51 @@ async function sendMessage(to, fromE, message) {
                                 });
                         }
                     });
+                }
+            });
+    });
+}
+
+async function getProductCount() {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let dbo = db.db('shopby');
+                    dbo.collection("products").countDocuments()
+                        .then(count => resolve(count));
+                }
+            });
+    });
+}
+
+async function getUserCount() {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let dbo = db.db('shopby');
+                    dbo.collection("users").countDocuments()
+                        .then(count => resolve(count));
+                }
+            });
+    });
+}
+
+async function getMessageCount() {
+    return new Promise(function(resolve, reject) {
+        MongoClient.connect(url, {useUnifiedTopology: true, useNewUrlParser: true})
+            .then((db, err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let dbo = db.db('shopby');
+                    dbo.collection("messages").countDocuments()
+                        .then(count => resolve(count));
                 }
             });
     });

@@ -5,6 +5,7 @@ module.exports = {
     registerUser,
     getByEmail,
     loginUser,
+    getStatistics
 };
 
 async function registerUser(userParam) {
@@ -45,4 +46,15 @@ async function loginUser(email, password) {
         }
     }
     return null;
+}
+
+async function getStatistics() {
+    let prodCount = await db.getProductCount();
+    let userCount = await db.getUserCount();
+    let msgCount = await db.getMessageCount();
+    return [
+        prodCount,
+        userCount,
+        msgCount,
+    ];
 }

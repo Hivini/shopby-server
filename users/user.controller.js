@@ -6,6 +6,7 @@ const userService = require('./user.service');
 router.get('/getByEmail', getByEmail);
 router.post('/registerUser', registerUser);
 router.post('/loginUser', loginUser);
+router.get('/getStatistics', getStatistics);
 
 module.exports = router;
 
@@ -35,6 +36,19 @@ function getByEmail(req, res, next) {
         .then((user) => {
             if (user) {
                 res.json(user);
+            } else {
+                res.json({});
+            }
+        })
+        .catch(err => console.log(err));
+}
+
+// Putting this here because I am lazy to create another controller + service.
+function getStatistics(req, res, next) {
+    userService.getStatistics()
+        .then((stats) => {
+            if (stats) {
+                res.json(stats);
             } else {
                 res.json({});
             }
