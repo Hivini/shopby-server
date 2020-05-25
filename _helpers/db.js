@@ -1,3 +1,4 @@
+const mailer = require('./mailer');
 const MongoClient = require('mongodb').MongoClient;
 const mongodb = require('mongodb');
 const url = require('../config/env-vars').db_url;
@@ -149,6 +150,7 @@ async function deleteProduct(id) {
                                 if (err) {
                                     reject(err);
                                 }
+                                mailer.sendEmail(product.user.email, product.title);
                                 resolve({successful: 1});
                             });
                         } else {
