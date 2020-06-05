@@ -1,4 +1,4 @@
-const db = require('../_helpers/db');
+const db = require('../_helpers/db_handler');
 
 module.exports = {
     saveMessage,
